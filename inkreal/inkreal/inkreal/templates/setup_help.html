@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Setup Required — InkReal</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',sans-serif;background:#FAF8F5;color:#1a1a1a;line-height:1.6;padding:60px 24px;min-height:100vh}
+.container{max-width:720px;margin:0 auto;background:#fff;padding:48px;border-radius:14px;border:1px solid #E8E4DF}
+h1{font-family:'Source Serif 4',serif;font-size:36px;color:#3D2B1F;margin-bottom:12px;letter-spacing:-1px}
+.subtitle{color:#666;margin-bottom:32px;font-size:16px}
+h2{font-family:'Source Serif 4',serif;font-size:20px;color:#3D2B1F;margin:32px 0 12px}
+p{margin-bottom:12px;color:#333}
+ol{padding-left:20px}
+ol li{margin-bottom:10px}
+code{font-family:'JetBrains Mono',monospace;background:#F0EDE8;padding:2px 8px;border-radius:4px;font-size:13px;color:#3D2B1F}
+pre{background:#3D2B1F;color:#F0EDE8;padding:16px;border-radius:8px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13px;margin:12px 0}
+a{color:#4111CC;font-weight:500}
+.step{border-left:3px solid #4111CC;padding-left:16px;margin:24px 0}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Setup Required</h1>
+<p class="subtitle">Firebase key is missing. Follow these steps to connect InkReal to your Firebase project.</p>
+<div class="step">
+<h2>Step 1: Create Firebase project</h2>
+<ol>
+<li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
+<li>Click <strong>Add project</strong>, name it, disable Analytics, create</li>
+</ol>
+</div>
+<div class="step">
+<h2>Step 2: Enable Firestore</h2>
+<ol>
+<li>Left sidebar &rarr; <strong>Build &rarr; Firestore Database</strong></li>
+<li>Click <strong>Create database</strong>, select <strong>Test mode</strong>, pick a location, enable</li>
+</ol>
+</div>
+<div class="step">
+<h2>Step 3: Download service account key</h2>
+<ol>
+<li>Click gear icon &rarr; <strong>Project settings</strong></li>
+<li>Tab: <strong>Service accounts</strong></li>
+<li>Click <strong>Generate new private key</strong>, download the JSON file</li>
+</ol>
+</div>
+<div class="step">
+<h2>Step 4: Place the key</h2>
+<p>Rename the downloaded file to <code>serviceAccountKey.json</code> and place it in your project root.</p>
+<p>PowerShell command:</p>
+<pre>Move-Item "C:\Users\DELL\Downloads\*firebase-adminsdk*.json" ".\serviceAccountKey.json"</pre>
+</div>
+<div class="step">
+<h2>Step 5: Set Firestore security rules</h2>
+<p>In Firebase Console &rarr; Firestore &rarr; Rules, paste this and publish:</p>
+<pre>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /posts/{postId} {
+      allow read: if resource.data.hidden == false || resource.data.hidden == null;
+      allow write: if false;
+      match /comments/{commentId} {
+        allow read: if true;
+        allow write: if false;
+      }
+      match /revisions/{revisionId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+    match /reports/{reportId} {
+      allow read, write: if false;
+    }
+  }
+}</pre>
+<p><strong>Note:</strong> Since Flask uses admin SDK, it bypasses these rules. This locks down direct client access.</p>
+</div>
+<div class="step">
+<h2>Step 6: Restart</h2>
+<pre>python app.py</pre>
+<p>You should see <code>Firebase initialized successfully</code>. Then <a href="/">go back home</a>.</p>
+</div>
+</div>
+</body>
+</html>

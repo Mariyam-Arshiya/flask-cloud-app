@@ -1,0 +1,35 @@
+﻿{% extends "base.html" %}
+{% block title %}Revisions — {{ post.title }}{% endblock %}
+{% block content %}
+<div class="revisions-page">
+<div class="revisions-container">
+<a href="{{ url_for('post.view', post_id=post.id) }}" class="back-link">&larr; Back to post</a>
+<div class="revisions-header">
+<h1>Revision history</h1>
+<p>{{ post.title }}</p>
+<div class="revisions-summary">{{ revisions|length }} version{{ 's' if revisions|length != 1 else '' }} over {{ post.first_draft_at|duration }}</div>
+</div>
+<div class="revisions-timeline">
+{% for rev in revisions %}
+<div class="rev-item">
+<div class="rev-marker">
+<div class="rev-dot"></div>
+{% if not loop.last %}<div class="rev-line"></div>{% endif %}
+</div>
+<div class="rev-content">
+<div class="rev-head">
+<span class="rev-version">v{{ rev.version }}</span>
+<span class="rev-time">{{ rev.created_at|timeago }}</span>
+{% if rev.note %}<span class="rev-note">{{ rev.note }}</span>{% endif %}
+</div>
+<div class="rev-body">
+<h3>{{ rev.title }}</h3>
+<p>{{ rev.content[:300] }}{% if rev.content|length > 300 %}...{% endif %}</p>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

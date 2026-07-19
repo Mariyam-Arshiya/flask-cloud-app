@@ -1,0 +1,58 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ user.name }} (@{{ user.handle }}){% endblock %}
+{% block content %}
+<div class="profile-page">
+<div class="profile-cover"><img src="{{ user.cover_url }}" alt=""></div>
+<div class="profile-header">
+<div class="profile-header-inner">
+{% if user.avatar_url %}<img src="{{ user.avatar_url }}" alt="{{ user.name }}" class="profile-avatar-img">
+{% else %}<div class="profile-avatar-large">{{ user.avatar_letter or '?' }}</div>{% endif %}
+<div class="profile-info">
+<h1 class="profile-name">{{ user.name }}{% if user.github_verified %} <span class="verified-badge" title="GitHub verified">GH</span>{% endif %}</h1>
+<p class="profile-handle">@{{ user.handle }}</p>
+{% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% endif %}
+<div class="profile-meta">
+{% if user.location %}<span class="profile-meta-item">{{ user.location }}</span>{% endif %}
+{% if user.website %}<a href="{{ user.website }}" class="profile-meta-item" target="_blank">{{ user.website|replace('https://','')|replace('http://','') }}</a>{% endif %}
+{% if user.github_username %}<a href="https://github.com/{{ user.github_username }}" class="profile-meta-item" target="_blank">github.com/{{ user.github_username }}</a>{% endif %}
+<span class="profile-meta-item">Joined {{ user.created_at|timeago }}</span>
+</div>
+<div class="profile-stats">
+<span><strong>{{ user.post_count or 0 }}</strong> posts</span>
+<span><strong>{{ user.dead_end_count or 0 }}</strong> dead ends</span>
+<span><strong>{{ user.total_edits or 0 }}</strong> edits</span>
+<span><strong>{{ user.followers_count or 0 }}</strong> followers</span>
+</div>
+</div>
+<div class="profile-actions">
+{% if is_own_profile %}<a href="{{ url_for('profile.settings') }}" class="btn-edit-profile">Edit Profile</a>
+{% else %}<button class="btn-follow {% if is_following %}following{% endif %}" onclick="handleFollow(this,'{{ user.id }}')">{{ 'Following' if is_following else 'Follow' }}</button>{% endif %}
+</div>
+</div>
+</div>
+<div class="profile-content">
+<div class="profile-tabs">
+<button class="profile-tab active" data-view="all">All posts <span class="ptab-count">{{ posts|length }}</span></button>
+<button class="profile-tab" data-view="deadends">Dead ends <span class="ptab-count">{{ dead_ends|length }}</span></button>
+</div>
+<div class="posts-list" id="allPosts">
+{% for post in posts %}{% include 'components/post_card.html' %}{% endfor %}
+{% if not posts %}
+<div class="empty-state">
+{% if is_own_profile %}<p>You have not written anything yet. Start with what did not work today.</p>
+<a href="{{ url_for('post.write') }}" class="btn-primary">Write your first post</a>
+{% else %}<p>{{ user.name }} has not written anything yet.</p>{% endif %}
+</div>
+{% endif %}
+</div>
+<div class="posts-list" id="deadendPosts" style="display:none">
+{% for post in dead_ends %}{% include 'components/post_card.html' %}{% endfor %}
+{% if not dead_ends %}<div class="empty-state"><p>No dead ends posted yet.</p></div>{% endif %}
+</div>
+</div>
+</div>
+<script>
+document.querySelectorAll('.profile-tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.profile-tab').forEach(function(x){x.classList.remove('active')});this.classList.add('active');var v=this.dataset.view;document.getElementById('allPosts').style.display=v==='all'?'block':'none';document.getElementById('deadendPosts').style.display=v==='deadends'?'block':'none'})});
+</script>
+{% endblock %}
+{% block extra_js %}<script src="{{ url_for('static', filename='js/interactions.js') }}"></script>{% endblock %}

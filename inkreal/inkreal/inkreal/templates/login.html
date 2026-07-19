@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sign In — InkReal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<style>
+.auth-split{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.auth-vis{background:var(--ink-brown);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:48px}
+.auth-vis-img{position:absolute;inset:0;opacity:0.3}
+.auth-vis-img img{width:100%;height:100%;object-fit:cover}
+.auth-vis-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(61,43,31,0.5),rgba(61,43,31,0.9))}
+.auth-vis-content{position:relative;z-index:2}
+.auth-vis-logo{font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:700;color:#fff;text-decoration:none}
+.auth-vis-logo span{color:#B8860B}
+.auth-vis-quote{position:relative;z-index:2;color:#fff}
+.auth-vis-quote blockquote{font-family:'Source Serif 4',Georgia,serif;font-size:22px;font-style:italic;line-height:1.55;margin-bottom:16px;color:rgba(255,255,255,0.92)}
+.auth-vis-quote cite{font-size:13px;color:rgba(255,255,255,0.6);font-style:normal;font-family:'Inter',sans-serif}
+.auth-form-side{display:flex;align-items:center;justify-content:center;padding:48px;background:var(--ink-cream)}
+.auth-form-inner{width:100%;max-width:400px}
+.auth-form-inner h1{font-family:'Source Serif 4',Georgia,serif;font-size:32px;font-weight:600;color:var(--ink-brown);margin-bottom:10px;letter-spacing:-0.8px}
+.auth-sub{font-size:15px;color:var(--ink-text-muted);margin-bottom:32px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:13px;font-weight:500;color:var(--ink-text);margin-bottom:8px}
+.form-group input{width:100%;padding:12px 16px;border:1px solid var(--ink-border);border-radius:8px;font-size:15px;background:#fff;outline:none;transition:border-color 0.2s;font-family:'Inter',sans-serif}
+.form-group input:focus{border-color:var(--ink-primary)}
+.btn-auth{width:100%;padding:13px;background:var(--ink-primary);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;margin-top:8px}
+.btn-auth:hover{background:var(--ink-primary-light)}
+.auth-foot{text-align:center;margin-top:24px;font-size:14px;color:var(--ink-text-muted)}
+.auth-foot a{color:var(--ink-primary);font-weight:500;text-decoration:none}
+.auth-foot a:hover{text-decoration:underline}
+.flash-container{margin-bottom:20px}
+.flash-message{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:8px}
+.flash-error{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
+.flash-success{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+@media(max-width:900px){.auth-split{grid-template-columns:1fr}.auth-vis{display:none}}
+</style>
+</head>
+<body>
+<div class="auth-split">
+<div class="auth-vis">
+<div class="auth-vis-img"><img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=1200&q=80" alt=""></div>
+<div class="auth-vis-overlay"></div>
+<div class="auth-vis-content"><a href="/" class="auth-vis-logo">Ink<span>Real</span></a></div>
+<div class="auth-vis-quote">
+<blockquote>The wrong turn is often more instructive than the map.</blockquote>
+<cite>InkReal</cite>
+</div>
+</div>
+<div class="auth-form-side">
+<div class="auth-form-inner">
+<h1>Welcome back</h1>
+<p class="auth-sub">Sign in to continue.</p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}<div class="flash-container">{% for c,m in messages %}<div class="flash-message flash-{{c}}">{{m}}</div>{% endfor %}</div>{% endif %}
+{% endwith %}
+<form method="POST" action="{{ url_for('auth.login') }}">
+<div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="you@example.com" autocomplete="email"></div>
+<div class="form-group"><label>Password</label><input type="password" name="password" required placeholder="Enter password" autocomplete="current-password"></div>
+<button type="submit" class="btn-auth">Sign In</button>
+</form>
+<p class="auth-foot">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+</div>
+</div>
+</div>
+</body>
+</html>

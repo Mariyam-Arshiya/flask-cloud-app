@@ -1,0 +1,124 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block og_title %}{{ post.title }} — InkReal{% endblock %}
+{% block og_description %}{{ post.excerpt }}{% endblock %}
+{% block og_image %}{{ post.cover_url }}{% endblock %}
+{% block content %}
+<article class="post-detail">
+<div class="post-detail-container">
+{% if post.post_type == 'dead_end' %}
+<div class="dead-end-banner"><span class="de-tag">DEAD END</span> A record of what did not work.</div>
+{% endif %}
+{% if post.cover_url %}<div class="post-cover"><img src="{{ post.cover_url }}" alt="{{ post.title }}"></div>{% endif %}
+<header class="post-detail-header">
+{% if post.topic and post.topic != 'general' %}<span class="post-detail-topic">{{ post.topic }}</span>{% endif %}
+<h1 class="post-detail-title">{{ post.title }}</h1>
+{% if post.subtitle %}<p class="post-detail-subtitle">{{ post.subtitle }}</p>{% endif %}
+<div class="post-detail-author">
+<a href="{{ url_for('profile.view', handle=post.author_handle) }}" class="post-detail-author-link">
+{% if post.author_avatar_url %}<img src="{{ post.author_avatar_url }}" class="post-avatar-img post-avatar-img--lg" alt="">
+{% else %}<div class="post-avatar post-avatar--lg">{{ post.author_avatar_letter or '?' }}</div>{% endif %}
+<div class="post-detail-author-info">
+<span class="post-detail-author-name">{{ post.author_name }}{% if post.author_github_verified %} <span class="verified-badge" title="GitHub verified">GH</span>{% endif %}</span>
+<span class="post-detail-meta">@{{ post.author_handle }} &middot; {{ post.created_at|timeago }} &middot; {{ post.content|readtime }}</span>
+</div>
+</a>
+{% if post.edit_count > 0 %}
+<a href="{{ url_for('post.revisions', post_id=post.id) }}" class="revision-tag" title="View revision history">
+v{{ post.current_version }} &middot; {{ post.edit_count }} edit{{ 's' if post.edit_count != 1 else '' }} over {{ post.first_draft_at|duration }}
+</a>
+{% else %}
+<span class="revision-tag revision-tag--first">v1 &middot; first draft</span>
+{% endif %}
+</div>
+</header>
+<div class="post-detail-content prose">{{ post.content|markdown|safe }}</div>
+{% if post.post_type == 'dead_end' and (post.what_failed or post.what_learned) %}
+<div class="dead-end-box">
+{% if post.what_failed %}
+<div class="de-section"><div class="de-label">What failed</div><div class="de-body">{{ post.what_failed }}</div></div>
+{% endif %}
+{% if post.what_learned %}
+<div class="de-section de-section--learned"><div class="de-label">What was learned</div><div class="de-body">{{ post.what_learned }}</div></div>
+{% endif %}
+{% if post.github_repo %}
+<a href="{{ post.github_repo }}" target="_blank" rel="noopener" class="de-github">View repo on GitHub &rarr;</a>
+{% endif %}
+</div>
+{% endif %}
+{% if post.tags %}
+<div class="post-tags">
+{% for tag in post.tags %}<a href="{{ url_for('main.tag_view', tag=tag) }}" class="post-tag">#{{ tag }}</a>{% endfor %}
+</div>
+{% endif %}
+<div class="post-detail-actions">
+<button class="action-btn like-btn {% if is_liked %}active{% endif %}" onclick="handleLike(this,'{{ post.id }}')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+<span class="like-count">{{ post.likes or 0 }}</span>
+<span class="action-label">Like</span>
+</button>
+<button class="action-btn bookmark-btn {% if is_bookmarked %}active{% endif %}" onclick="handleBookmark(this,'{{ post.id }}')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+<span class="action-label">Save</span>
+</button>
+<button class="action-btn" onclick="sharePost('{{ post.title }}')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+<span class="action-label">Share</span>
+</button>
+{% if session.get('user_id') and session.get('user_id') != post.author_id %}
+<button class="action-btn" onclick="reportPost('{{ post.id }}')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg>
+<span class="action-label">Report</span>
+</button>
+{% endif %}
+{% if session.get('user_id') == post.author_id %}
+<a href="{{ url_for('post.edit', post_id=post.id) }}" class="action-btn">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+<span class="action-label">Edit</span>
+</a>
+<form method="POST" action="{{ url_for('post.delete', post_id=post.id) }}" style="display:inline" onsubmit="return confirm('Delete this post?')">
+<button type="submit" class="action-btn action-btn--danger">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+<span class="action-label">Delete</span>
+</button>
+</form>
+{% endif %}
+</div>
+<section class="comments-section" id="comments">
+<h2 class="comments-title">Comments <span class="comments-count">({{ comments|length }})</span></h2>
+{% if session.get('user_id') %}
+<div class="comment-form">
+{% if session.get('user_avatar_url') %}<img src="{{ session.get('user_avatar_url') }}" class="comment-avatar-img" alt="">
+{% else %}<div class="comment-form-avatar">{{ session.get('user_avatar', '?') }}</div>{% endif %}
+<div class="comment-form-body">
+<textarea id="commentInput" placeholder="Write a thoughtful comment. Be helpful, not harsh." maxlength="2000"></textarea>
+<button class="btn-comment" onclick="submitComment('{{ post.id }}')">Comment</button>
+</div>
+</div>
+{% endif %}
+<div class="comments-list" id="commentsList">
+{% for comment in comments %}{% include 'components/comment.html' %}{% endfor %}
+{% if not comments %}<p class="no-comments">No comments yet. Start the conversation.</p>{% endif %}
+</div>
+</section>
+{% if more_posts %}
+<section class="more-from-author">
+<h2 class="section-title">More from {{ post.author_name }}</h2>
+<div class="more-posts-list">
+{% for mp in more_posts %}
+<a href="{{ url_for('post.view', post_id=mp.id) }}" class="more-post-item">
+{% if mp.cover_url %}<img src="{{ mp.cover_url }}" alt="" class="more-post-image">{% endif %}
+<div class="more-post-info">
+{% if mp.post_type == 'dead_end' %}<span class="mini-de-tag">DEAD END</span>{% endif %}
+<h3>{{ mp.title }}</h3>
+<span class="more-post-meta">{{ mp.created_at|timeago }} &middot; {{ mp.content|readtime }}</span>
+</div>
+</a>
+{% endfor %}
+</div>
+</section>
+{% endif %}
+</div>
+</article>
+{% endblock %}
+{% block extra_js %}<script src="{{ url_for('static', filename='js/interactions.js') }}"></script>{% endblock %}

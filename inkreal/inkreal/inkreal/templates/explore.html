@@ -1,0 +1,28 @@
+﻿{% extends "base.html" %}
+{% block title %}Explore{% endblock %}
+{% block content %}
+<div class="explore-page">
+<div class="explore-header">
+<span class="section-eyebrow">Explore</span>
+<h1 class="explore-title">The best dead ends this week</h1>
+<p class="explore-subtitle">What did not work is often more useful than what did. Learn from the struggle.</p>
+</div>
+<div class="tag-cloud">
+{% for tag in tags %}<a href="{{ url_for('main.tag_view', tag=tag.lower()) }}" class="tag-chip">#{{ tag }}</a>{% endfor %}
+</div>
+<div class="explore-section">
+<h2 class="section-title">Dead ends worth reading</h2>
+<div class="posts-list">
+{% for post in dead_ends %}{% include 'components/post_card.html' %}{% endfor %}
+{% if not dead_ends %}<div class="empty-state"><p>No dead ends posted yet. Be the first.</p></div>{% endif %}
+</div>
+</div>
+<div class="explore-section">
+<h2 class="section-title">Trending</h2>
+<div class="posts-list">
+{% for post in trending %}{% include 'components/post_card.html' %}{% endfor %}
+{% if not trending %}<div class="empty-state"><p>No posts yet.</p></div>{% endif %}
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+﻿{% extends "base.html" %}
+{% block title %}Write{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">{% endblock %}
+{% block content %}
+<div class="write-page">
+<form method="POST" action="{{ url_for('post.write') }}" class="write-form" id="writeForm">
+<div class="write-type-selector">
+<label class="write-type-option active">
+<input type="radio" name="post_type" value="regular" checked>
+<div class="write-type-inner">
+<span class="write-type-label">Regular Post</span>
+<span class="write-type-desc">A thought, update, or story</span>
+</div>
+</label>
+<label class="write-type-option">
+<input type="radio" name="post_type" value="dead_end">
+<div class="write-type-inner">
+<span class="write-type-label write-type-danger">Dead End</span>
+<span class="write-type-desc">Something you tried that did not work</span>
+</div>
+</label>
+</div>
+<div class="write-header">
+<div class="write-meta-row">
+<select name="topic" class="write-select" id="topicSelect">
+<option value="general">Select Topic</option>
+<option value="technology">Technology</option>
+<option value="writing">Writing</option>
+<option value="life">Life</option>
+<option value="career">Career</option>
+<option value="startups">Startups</option>
+<option value="design">Design</option>
+<option value="buildinpublic">Build in Public</option>
+</select>
+</div>
+</div>
+<div class="cover-preview" id="coverPreview">
+<img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&q=80" alt="" id="coverImage">
+<input type="hidden" name="cover_url" id="coverUrlInput">
+<div class="cover-hint">Cover auto-selected by topic</div>
+</div>
+<div class="write-body">
+<input type="text" name="title" class="write-title-input" placeholder="Title" required>
+<input type="text" name="subtitle" class="write-subtitle-input" placeholder="Subtitle (optional)">
+<textarea name="content" class="write-content-input" id="contentInput" placeholder="Write your thoughts here. Use markdown for formatting. Add #tags anywhere in your text." required minlength="30"></textarea>
+</div>
+<div class="dead-end-fields" id="deadEndFields" style="display:none;">
+<div class="de-header">
+<h3>Tell us what happened</h3>
+<p>This is the part that makes InkReal different. Be specific.</p>
+</div>
+<div class="form-group">
+<label>What failed (optional)</label>
+<textarea name="what_failed" placeholder="What did not work? What error, wrong assumption, or dead end did you hit?" rows="3"></textarea>
+</div>
+<div class="form-group">
+<label>What you learned <span class="required">required</span></label>
+<textarea name="what_learned" placeholder="What would you tell someone else about to try this? What is the lesson?" rows="3" id="learnedInput"></textarea>
+</div>
+<div class="form-group">
+<label>GitHub repo (optional)</label>
+<input type="url" name="github_repo" placeholder="https://github.com/you/repo">
+</div>
+</div>
+<div class="write-footer">
+<div class="write-info">
+<span class="counter" id="wordCount">0 words</span>
+<span class="counter" id="charCount">0 characters</span>
+</div>
+<div class="write-actions">
+<button type="button" class="btn-secondary" onclick="history.back()">Cancel</button>
+<button type="submit" class="btn-publish">Publish</button>
+</div>
+</div>
+</form>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('input[name="post_type"]').forEach(function(r){
+    r.addEventListener('change',function(){
+        document.querySelectorAll('.write-type-option').forEach(function(o){o.classList.remove('active')});
+        this.closest('.write-type-option').classList.add('active');
+        document.getElementById('deadEndFields').style.display=this.value==='dead_end'?'block':'none';
+        if(this.value==='dead_end')document.getElementById('learnedInput').setAttribute('required','required');
+        else document.getElementById('learnedInput').removeAttribute('required');
+    });
+});
+var covers={technology:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80',writing:'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80',life:'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=80',career:'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80',startups:'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80',design:'https://images.unsplash.com/photo-1561070791-2526d30994b8?w=1200&q=80',buildinpublic:'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80',general:'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&q=80'};
+document.getElementById('coverUrlInput').value=covers.general;
+document.getElementById('topicSelect').addEventListener('change',function(){var u=covers[this.value]||covers.general;document.getElementById('coverImage').src=u;document.getElementById('coverUrlInput').value=u});
+var ta=document.getElementById('contentInput');
+function updateCounts(){var t=ta.value.trim();var w=t?t.split(/\s+/).length:0;document.getElementById('wordCount').textContent=w+' word'+(w!==1?'s':'');document.getElementById('charCount').textContent=t.length+' characters'}
+function autoResize(){ta.style.height='auto';ta.style.height=ta.scrollHeight+'px'}
+ta.addEventListener('input',function(){autoResize();updateCounts()});
+autoResize();
+</script>
+{% endblock %}

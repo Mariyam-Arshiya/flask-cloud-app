@@ -1,0 +1,15 @@
+﻿{% extends "base.html" %}
+{% block title %}#{{ tag }}{% endblock %}
+{% block content %}
+<div class="explore-page">
+<div class="explore-header">
+<span class="section-eyebrow">Tag</span>
+<h1 class="explore-title">#{{ tag }}</h1>
+<p class="explore-subtitle">{{ posts|length }} post{{ 's' if posts|length != 1 else '' }} tagged with #{{ tag }}</p>
+</div>
+<div class="posts-list">
+{% for post in posts %}{% include 'components/post_card.html' %}{% endfor %}
+{% if not posts %}<div class="empty-state"><p>No posts with this tag yet.</p></div>{% endif %}
+</div>
+</div>
+{% endblock %}

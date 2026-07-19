@@ -1,0 +1,22 @@
+﻿<aside class="sidebar">
+<div class="sidebar-card sidebar-card--hero">
+<div class="side-hero-tag">FOR YOU</div>
+<h3 class="side-hero-title">Share a dead end today</h3>
+<p class="side-hero-text">The idea that did not work is worth as much as the one that did. Maybe more.</p>
+<a href="{{ url_for('post.write') }}" class="side-hero-btn">Start writing</a>
+</div>
+<div class="sidebar-card">
+<h3 class="sidebar-title">Trending tags</h3>
+<div class="side-tags">
+<a href="{{ url_for('main.tag_view', tag='buildinpublic') }}" class="side-tag">#buildinpublic</a>
+<a href="{{ url_for('main.tag_view', tag='100daysofcode') }}" class="side-tag">#100DaysOfCode</a>
+<a href="{{ url_for('main.tag_view', tag='deadend') }}" class="side-tag">#deadend</a>
+<a href="{{ url_for('main.tag_view', tag='learning') }}" class="side-tag">#learning</a>
+<a href="{{ url_for('main.tag_view', tag='startups') }}" class="side-tag">#startups</a>
+</div>
+</div>
+<div class="sidebar-footer">
+<p>InkReal 2024</p>
+<div class="sidebar-foot-links"><a href="#">About</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+</div>
+</aside>

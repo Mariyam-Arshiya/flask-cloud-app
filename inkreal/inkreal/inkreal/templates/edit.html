@@ -1,0 +1,28 @@
+﻿{% extends "base.html" %}
+{% block title %}Edit — {{ post.title }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">{% endblock %}
+{% block content %}
+<div class="write-page">
+<div class="edit-banner">
+Editing <strong>v{{ post.current_version }}</strong> &middot; This will create v{{ post.current_version + 1 }} in the revision history. Others will see the change.
+</div>
+<form method="POST" action="{{ url_for('post.edit', post_id=post.id) }}" class="write-form">
+<div class="write-body" style="padding-top:32px">
+<input type="text" name="title" class="write-title-input" value="{{ post.title }}" required>
+<input type="text" name="subtitle" class="write-subtitle-input" value="{{ post.subtitle or '' }}" placeholder="Subtitle (optional)">
+<textarea name="content" class="write-content-input" required minlength="30">{{ post.content }}</textarea>
+</div>
+<div class="form-group" style="padding:0 32px 20px">
+<label>Edit note (optional, but helpful)</label>
+<input type="text" name="edit_note" placeholder="e.g. 'fixed typo', 'rewrote intro', 'added learning'" style="width:100%;padding:11px 16px;border:1px solid var(--ink-border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif">
+</div>
+<div class="write-footer">
+<div class="write-info"><span class="counter">v{{ post.current_version }} &rarr; v{{ post.current_version + 1 }}</span></div>
+<div class="write-actions">
+<a href="{{ url_for('post.view', post_id=post.id) }}" class="btn-secondary">Cancel</a>
+<button type="submit" class="btn-publish">Save Revision</button>
+</div>
+</div>
+</form>
+</div>
+{% endblock %}

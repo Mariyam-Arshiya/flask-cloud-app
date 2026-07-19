@@ -1,0 +1,39 @@
+﻿{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="settings-page">
+<div class="settings-container">
+<h1 class="settings-title">Settings</h1>
+<form method="POST" action="{{ url_for('profile.settings') }}" class="settings-form">
+<div class="settings-section">
+<h2 class="settings-section-title">Profile</h2>
+<div class="form-group"><label>Name</label><input type="text" name="name" value="{{ user.name }}" required></div>
+<div class="form-group"><label>Handle</label><input type="text" value="@{{ user.handle }}" disabled class="input-disabled"><p class="form-hint">Handle cannot be changed.</p></div>
+<div class="form-group"><label>Avatar URL</label><input type="url" name="avatar_url" value="{{ user.avatar_url or '' }}" placeholder="Image URL"><p class="form-hint">Use an Unsplash, Pexels, or Dicebear URL.</p></div>
+<div class="form-group"><label>Bio</label><textarea name="bio" maxlength="200" rows="3">{{ user.bio or '' }}</textarea></div>
+<div class="form-group"><label>Location</label><input type="text" name="location" value="{{ user.location or '' }}" placeholder="City, Country"></div>
+<div class="form-group"><label>Website</label><input type="url" name="website" value="{{ user.website or '' }}" placeholder="https://yoursite.com"></div>
+</div>
+<div class="settings-actions"><button type="submit" class="btn-primary">Save Changes</button></div>
+</form>
+<div class="settings-section">
+<h2 class="settings-section-title">Verification</h2>
+{% if user.github_verified %}
+<div class="verify-status verify-status--ok">
+<div>
+<strong>GitHub linked</strong>
+<p>Connected as <a href="https://github.com/{{ user.github_username }}" target="_blank">@{{ user.github_username }}</a></p>
+</div>
+</div>
+{% else %}
+<p class="form-hint" style="margin-bottom:16px">Link your GitHub to add verification to your posts about code. Others see your real work as supporting proof.</p>
+<a href="{{ url_for('github.connect') }}" class="btn-github">Connect GitHub</a>
+{% endif %}
+</div>
+<div class="settings-section settings-danger">
+<h2 class="settings-section-title">Account</h2>
+<a href="{{ url_for('auth.logout') }}" class="btn-logout">Sign Out</a>
+</div>
+</div>
+</div>
+{% endblock %}
