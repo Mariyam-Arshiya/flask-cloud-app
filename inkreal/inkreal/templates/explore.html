@@ -1,0 +1,30 @@
+﻿{% extends "base.html" %}
+{% block title %}Explore{% endblock %}
+{% block content %}
+<div class="explore-page">
+<div class="explore-header">
+<span class="section-eyebrow">Explore</span>
+<h1 class="explore-title">Discover authentic voices</h1>
+<p class="explore-subtitle">Real writing from real people, across topics that matter.</p>
+</div>
+<div class="explore-topics">
+{% for topic in topics %}
+<a href="#" class="explore-topic-card">
+<div class="explore-topic-image"><img src="{{ topic.image }}" alt="{{ topic.name }}"></div>
+<div class="explore-topic-overlay">
+<span class="explore-topic-name">{{ topic.name }}</span>
+</div>
+</a>
+{% endfor %}
+</div>
+<div class="explore-section">
+<h2 class="section-title">Trending Now</h2>
+<div class="posts-list">
+{% for post in trending %}{% include 'components/post_card.html' %}{% endfor %}
+{% if not trending %}
+<div class="empty-state"><p>No trending posts yet. Be the first to write something remarkable.</p></div>
+{% endif %}
+</div>
+</div>
+</div>
+{% endblock %}

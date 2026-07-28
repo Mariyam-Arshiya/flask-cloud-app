@@ -1,0 +1,61 @@
+﻿{% extends "base.html" %}
+{% block title %}Write{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
+{% endblock %}
+{% block content %}
+<div class="write-page">
+<form method="POST" action="{{ url_for('post.write') }}" class="write-form" id="writeForm">
+<div class="write-header">
+<div class="write-meta-row">
+<select name="topic" class="write-topic-select" id="topicSelect">
+<option value="general">Select Topic</option>
+<option value="technology">Technology</option>
+<option value="writing">Writing</option>
+<option value="life">Life</option>
+<option value="career">Career</option>
+<option value="philosophy">Philosophy</option>
+<option value="creativity">Creativity</option>
+<option value="health">Health</option>
+<option value="books">Books</option>
+<option value="startups">Startups</option>
+<option value="design">Design</option>
+</select>
+<select name="post_type" class="write-type-select">
+<option value="article">Article</option>
+<option value="thought">Quick Thought</option>
+<option value="story">Story</option>
+<option value="question">Question</option>
+</select>
+</div>
+</div>
+<div class="cover-preview" id="coverPreview">
+<img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&q=80" alt="Cover" id="coverImage">
+<input type="hidden" name="cover_url" id="coverUrlInput">
+<div class="cover-hint">Cover image auto-selected by topic</div>
+</div>
+<div class="write-body">
+<input type="text" name="title" class="write-title-input" placeholder="Title" required autocomplete="off">
+<input type="text" name="subtitle" class="write-subtitle-input" placeholder="Add a subtitle (optional)" autocomplete="off">
+<textarea name="content" class="write-content-input" id="contentInput" placeholder="Write your thoughts here. Use markdown for formatting. Just be yourself." required minlength="50"></textarea>
+</div>
+<div class="human-score-preview" id="humanScorePreview" style="display:none;">
+<div class="human-score-bar"><div class="human-score-fill" id="humanScoreFill"></div></div>
+<span class="human-score-label" id="humanScoreLabel"></span>
+</div>
+<div class="write-footer">
+<div class="write-info">
+<span class="word-count" id="wordCount">0 words</span>
+<span class="char-count" id="charCount">0 characters</span>
+</div>
+<div class="write-actions">
+<button type="button" class="btn-secondary" onclick="window.history.back()">Cancel</button>
+<button type="submit" class="btn-publish">Publish</button>
+</div>
+</div>
+</form>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock %}

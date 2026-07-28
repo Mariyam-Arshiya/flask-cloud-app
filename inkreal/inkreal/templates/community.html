@@ -1,0 +1,31 @@
+﻿{% extends "base.html" %}
+{% block title %}Community{% endblock %}
+{% block content %}
+<div class="community-page">
+<div class="community-header">
+<span class="section-eyebrow">Community</span>
+<h1 class="community-title">Writers who show up</h1>
+<p class="community-subtitle">Meet the humans building the future of authentic writing.</p>
+</div>
+<div class="writers-grid">
+{% for writer in writers %}
+<a href="{{ url_for('profile.view', handle=writer.handle) }}" class="writer-card">
+{% if writer.avatar_url %}
+<img src="{{ writer.avatar_url }}" alt="{{ writer.name }}" class="writer-avatar-img">
+{% else %}
+<div class="writer-avatar">{{ writer.avatar_letter or '?' }}</div>
+{% endif %}
+<div class="writer-info">
+<span class="writer-name">{{ writer.name }}</span>
+<span class="writer-handle">@{{ writer.handle }}</span>
+{% if writer.bio %}<p class="writer-bio">{{ writer.bio[:80] }}{{ '...' if writer.bio|length > 80 else '' }}</p>{% endif %}
+</div>
+<div class="writer-streak">
+<span class="writer-streak-number">{{ writer.streak_current or 0 }}</span>
+<span class="writer-streak-label">day streak</span>
+</div>
+</a>
+{% endfor %}
+</div>
+</div>
+{% endblock %}

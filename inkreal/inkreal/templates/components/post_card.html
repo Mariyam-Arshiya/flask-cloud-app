@@ -1,0 +1,46 @@
+﻿<article class="post-card">
+{% if post.cover_url %}
+<a href="{{ url_for('post.view', post_id=post.id) }}" class="post-card-cover">
+<img src="{{ post.cover_url }}" alt="{{ post.title }}">
+</a>
+{% endif %}
+<div class="post-card-content">
+<div class="post-card-header">
+<a href="{{ url_for('profile.view', handle=post.author_handle) }}" class="post-author">
+{% if post.author_avatar_url %}
+<img src="{{ post.author_avatar_url }}" alt="{{ post.author_name }}" class="post-avatar-img">
+{% else %}
+<div class="post-avatar">{{ post.author_avatar_letter or '?' }}</div>
+{% endif %}
+<div class="post-author-info">
+<span class="post-author-name">{{ post.author_name }}</span>
+<span class="post-meta-line">@{{ post.author_handle }} &middot; {{ post.created_at|timeago }} &middot; {{ post.content|readtime }}</span>
+</div>
+</a>
+{% if post.human_score %}
+<div class="human-badge human-badge--{{ 'high' if post.human_score >= 70 else ('mid' if post.human_score >= 50 else 'low') }}">
+{{ post.human_score }}%
+</div>
+{% endif %}
+</div>
+<a href="{{ url_for('post.view', post_id=post.id) }}" class="post-card-body">
+<h2 class="post-title">{{ post.title }}</h2>
+{% if post.subtitle %}<p class="post-subtitle">{{ post.subtitle }}</p>{% endif %}
+<p class="post-excerpt">{{ post.excerpt or '' }}</p>
+</a>
+{% if post.topic and post.topic != 'general' %}<div class="post-topic-tag">{{ post.topic }}</div>{% endif %}
+<div class="post-card-footer">
+<button class="post-action upvote-btn {% if session.get('user_id') in (post.upvoted_by or []) %}active{% endif %}" data-post-id="{{ post.id }}" onclick="handleUpvote(this, '{{ post.id }}')">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+<span class="upvote-count">{{ post.upvotes or 0 }}</span>
+</button>
+<a href="{{ url_for('post.view', post_id=post.id) }}#comments" class="post-action">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+<span>{{ post.comment_count or 0 }}</span>
+</a>
+<button class="post-action bookmark-btn {% if session.get('user_id') in (post.bookmarked_by or []) %}active{% endif %}" data-post-id="{{ post.id }}" onclick="handleBookmark(this, '{{ post.id }}')">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+</button>
+</div>
+</div>
+</article>

@@ -1,0 +1,32 @@
+﻿{% extends "base.html" %}
+{% block title %}Feed{% endblock %}
+{% block content %}
+<div class="feed-layout">
+<div class="feed-main">
+<div class="feed-header">
+<h1 class="feed-title">Your Feed</h1>
+<div class="feed-tabs">
+<button class="feed-tab active" data-tab="latest">Latest</button>
+<button class="feed-tab" data-tab="following">Following</button>
+<button class="feed-tab" data-tab="top">Top</button>
+</div>
+</div>
+<div class="posts-list">
+{% if posts %}
+{% for post in posts %}{% include 'components/post_card.html' %}{% endfor %}
+{% else %}
+<div class="empty-state">
+<img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80" alt="" class="empty-image">
+<h2>No posts yet</h2>
+<p>Be the first to write something real.</p>
+<a href="{{ url_for('post.write') }}" class="btn-primary">Write Your First Post</a>
+</div>
+{% endif %}
+</div>
+</div>
+{% include 'components/sidebar.html' %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/feed.js') }}"></script>
+{% endblock %}

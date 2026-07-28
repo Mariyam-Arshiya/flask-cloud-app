@@ -1,0 +1,28 @@
+﻿<nav class="mobile-nav">
+<a href="{{ url_for('main.feed') }}" class="mobile-nav-item {% if request.endpoint == 'main.feed' %}active{% endif %}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+<span>Home</span>
+</a>
+<a href="{{ url_for('main.explore') }}" class="mobile-nav-item {% if request.endpoint == 'main.explore' %}active{% endif %}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+<span>Explore</span>
+</a>
+<a href="{{ url_for('post.write') }}" class="mobile-nav-item mobile-nav-write">
+<div class="mobile-write-btn">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+</div>
+<span>Write</span>
+</a>
+<a href="{{ url_for('community.index') }}" class="mobile-nav-item {% if request.endpoint == 'community.index' %}active{% endif %}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+<span>Community</span>
+</a>
+<a href="{{ url_for('profile.view', handle=session.get('user_handle', '')) }}" class="mobile-nav-item {% if request.endpoint == 'profile.view' %}active{% endif %}">
+{% if session.get('user_avatar_url') %}
+<img src="{{ session.get('user_avatar_url') }}" class="mobile-nav-avatar-img" alt="">
+{% else %}
+<div class="mobile-nav-avatar">{{ session.get('user_avatar', '?') }}</div>
+{% endif %}
+<span>Profile</span>
+</a>
+</nav>

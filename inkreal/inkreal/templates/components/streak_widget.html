@@ -1,0 +1,15 @@
+﻿<div class="streak-widget">
+<div class="streak-header">
+<span class="streak-level-name" style="color:{{ streak_level.color }}">{{ streak_level.level }} Writer</span>
+</div>
+<div class="streak-stats">
+<div class="streak-stat"><div class="streak-stat-number">{{ streak.current }}</div><div class="streak-stat-label">Current</div></div>
+<div class="streak-stat"><div class="streak-stat-number">{{ streak.longest }}</div><div class="streak-stat-label">Longest</div></div>
+<div class="streak-stat"><div class="streak-stat-number">{{ streak.total_posts }}</div><div class="streak-stat-label">Total Posts</div></div>
+</div>
+{% if streak.wrote_today %}
+<div class="streak-today-badge">Written today</div>
+{% else %}
+<div class="streak-today-badge streak-today-pending">Write today to keep your streak</div>
+{% endif %}
+</div>

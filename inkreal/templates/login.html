@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — InkReal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <style>
+        .auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink-beige);padding:24px}
+        .auth-container{width:100%;max-width:400px}
+        .auth-logo{text-align:center;margin-bottom:40px}
+        .auth-logo a{font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:700;color:var(--ink-brown);text-decoration:none}
+        .auth-logo a span{color:var(--ink-primary)}
+        .auth-card{background:#fff;border:1px solid var(--ink-border);border-radius:12px;padding:40px 36px}
+        .auth-card h1{font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;color:var(--ink-text);margin-bottom:8px}
+        .auth-card .auth-subtitle{font-size:14px;color:var(--ink-text-muted);margin-bottom:28px}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;font-size:13px;font-weight:500;color:var(--ink-text);margin-bottom:6px}
+        .form-group input{width:100%;padding:10px 14px;border:1px solid var(--ink-border);border-radius:8px;font-size:15px;font-family:'Inter',sans-serif;background:var(--ink-beige);color:var(--ink-text);transition:border-color 0.2s;outline:none}
+        .form-group input:focus{border-color:var(--ink-primary);background:#fff}
+        .btn-auth{width:100%;padding:12px;background:var(--ink-primary);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;margin-top:4px}
+        .btn-auth:hover{background:var(--ink-primary-light)}
+        .auth-footer{text-align:center;margin-top:24px;font-size:14px;color:var(--ink-text-muted)}
+        .auth-footer a{color:var(--ink-primary);text-decoration:none;font-weight:500}
+        .auth-footer a:hover{text-decoration:underline}
+        .flash-container{margin-bottom:16px}
+        .flash-message{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:8px}
+        .flash-error{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}
+        .flash-success{background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0}
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-logo"><a href="/">Ink<span>Real</span></a></div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-container">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="auth-card">
+                <h1>Welcome back</h1>
+                <p class="auth-subtitle">Sign in to continue writing.</p>
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn-auth">Sign In</button>
+                </form>
+            </div>
+            <p class="auth-footer">Don't have an account? <a href="{{ url_for('auth.register') }}">Create one</a></p>
+        </div>
+    </div>
+</body>
+</html>

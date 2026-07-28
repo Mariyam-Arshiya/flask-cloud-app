@@ -1,0 +1,16 @@
+﻿<div class="comment" id="comment-{{ comment.id }}">
+<div class="comment-header">
+<a href="{{ url_for('profile.view', handle=comment.author_handle) }}" class="comment-author">
+{% if comment.author_avatar_url %}
+<img src="{{ comment.author_avatar_url }}" class="comment-avatar-img" alt="">
+{% else %}
+<div class="comment-avatar">{{ comment.author_avatar_letter or '?' }}</div>
+{% endif %}
+<div class="comment-author-info">
+<span class="comment-author-name">{{ comment.author_name }}</span>
+<span class="comment-time">{{ comment.created_at|timeago }}</span>
+</div>
+</a>
+</div>
+<div class="comment-body">{{ comment.content }}</div>
+</div>

@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join InkReal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<style>
+.auth-split{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.auth-visual{background:var(--ink-brown);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:48px}
+.auth-visual-img{position:absolute;inset:0;opacity:0.35}
+.auth-visual-img img{width:100%;height:100%;object-fit:cover}
+.auth-visual-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(61,43,31,0.5) 0%,rgba(61,43,31,0.85) 100%)}
+.auth-visual-content{position:relative;z-index:2}
+.auth-visual-logo{font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:700;color:#fff;text-decoration:none}
+.auth-visual-logo span{color:#B8860B}
+.auth-visual-quote{position:relative;z-index:2;color:#fff}
+.auth-visual-quote blockquote{font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-style:italic;line-height:1.5;margin-bottom:20px;color:rgba(255,255,255,0.92)}
+.auth-visual-quote cite{font-size:13px;color:rgba(255,255,255,0.6);font-style:normal;font-family:'Inter',sans-serif}
+.auth-form-side{display:flex;align-items:center;justify-content:center;padding:48px 40px;background:var(--ink-cream);overflow-y:auto}
+.auth-form-inner{width:100%;max-width:420px}
+.auth-form-inner h1{font-family:'Source Serif 4',Georgia,serif;font-size:34px;font-weight:600;color:var(--ink-brown);margin-bottom:10px;letter-spacing:-0.8px}
+.auth-form-inner .auth-subtitle{font-size:15px;color:var(--ink-text-muted);margin-bottom:32px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:500;margin-bottom:8px}
+.form-group input,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--ink-border);border-radius:8px;font-size:15px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink-text);transition:border-color 0.2s;outline:none}
+.form-group textarea{resize:vertical;min-height:70px}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--ink-primary)}
+.form-hint{font-size:12px;color:var(--ink-text-muted);margin-top:6px}
+.handle-prefix{display:flex;align-items:stretch}
+.handle-prefix span{padding:12px 14px;background:var(--ink-beige-dark);border:1px solid var(--ink-border);border-right:none;border-radius:8px 0 0 8px;font-size:14px;color:var(--ink-text-muted);display:flex;align-items:center}
+.handle-prefix input{border-radius:0 8px 8px 0}
+.btn-auth{width:100%;padding:13px;background:var(--ink-primary);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;margin-top:12px}
+.btn-auth:hover{background:var(--ink-primary-light)}
+.auth-footer{text-align:center;margin-top:24px;font-size:14px;color:var(--ink-text-muted)}
+.auth-footer a{color:var(--ink-primary);text-decoration:none;font-weight:500}
+.flash-container{margin-bottom:20px}
+.flash-message{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:8px}
+.flash-error{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
+@media(max-width:900px){.auth-split{grid-template-columns:1fr}.auth-visual{display:none}}
+</style>
+</head>
+<body>
+<div class="auth-split">
+<div class="auth-visual">
+<div class="auth-visual-img"><img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&q=80" alt=""></div>
+<div class="auth-visual-overlay"></div>
+<div class="auth-visual-content"><a href="/" class="auth-visual-logo">Ink<span>Real</span></a></div>
+<div class="auth-visual-quote">
+<blockquote>Start writing, no matter what. The water does not flow until the faucet is turned on.</blockquote>
+<cite>Louis L'Amour</cite>
+</div>
+</div>
+<div class="auth-form-side">
+<div class="auth-form-inner">
+<h1>Join InkReal</h1>
+<p class="auth-subtitle">Start your human writing journey.</p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+{% for category, message in messages %}
+<div class="flash-message flash-{{ category }}">{{ message }}</div>
+{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+<form method="POST" action="{{ url_for('auth.register') }}">
+<div class="form-group"><label for="name">Full Name</label><input type="text" id="name" name="name" required placeholder="Your name"></div>
+<div class="form-group"><label for="handle">Handle</label><div class="handle-prefix"><span>@</span><input type="text" id="handle" name="handle" required placeholder="yourhandle" pattern="[a-z0-9_]+" minlength="3"></div><p class="form-hint">Lowercase letters, numbers, underscores only.</p></div>
+<div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required placeholder="you@example.com"></div>
+<div class="form-group"><label for="password">Password</label><input type="password" id="password" name="password" required placeholder="At least 6 characters" minlength="6"></div>
+<div class="form-group"><label for="bio">Short Bio (optional)</label><textarea id="bio" name="bio" placeholder="A few words about yourself" maxlength="200"></textarea></div>
+<button type="submit" class="btn-auth">Create Account</button>
+</form>
+<p class="auth-footer">Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+</div>
+</div>
+</div>
+</body>
+</html>

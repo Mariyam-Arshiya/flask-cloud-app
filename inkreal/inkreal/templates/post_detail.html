@@ -1,0 +1,97 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<article class="post-detail">
+<div class="post-detail-container">
+{% if post.cover_url %}
+<div class="post-cover"><img src="{{ post.cover_url }}" alt="{{ post.title }}"></div>
+{% endif %}
+<header class="post-detail-header">
+{% if post.topic and post.topic != 'general' %}<span class="post-detail-topic">{{ post.topic }}</span>{% endif %}
+<h1 class="post-detail-title">{{ post.title }}</h1>
+{% if post.subtitle %}<p class="post-detail-subtitle">{{ post.subtitle }}</p>{% endif %}
+<div class="post-detail-author">
+<a href="{{ url_for('profile.view', handle=post.author_handle) }}" class="post-detail-author-link">
+{% if post.author_avatar_url %}
+<img src="{{ post.author_avatar_url }}" alt="{{ post.author_name }}" class="post-avatar-img post-avatar-img--lg">
+{% else %}
+<div class="post-avatar post-avatar--lg">{{ post.author_avatar_letter or '?' }}</div>
+{% endif %}
+<div class="post-detail-author-info">
+<span class="post-detail-author-name">{{ post.author_name }}</span>
+<span class="post-detail-meta">@{{ post.author_handle }} &middot; {{ post.created_at|timeago }} &middot; {{ post.content|readtime }}</span>
+</div>
+</a>
+{% if post.human_score %}
+<div class="human-badge-detail human-badge--{{ 'high' if post.human_score >= 70 else ('mid' if post.human_score >= 50 else 'low') }}">
+Human Score {{ post.human_score }}%
+</div>
+{% endif %}
+</div>
+</header>
+<div class="post-detail-content prose">{{ post.content|markdown|safe }}</div>
+<div class="post-detail-actions">
+<button class="action-btn upvote-btn {% if is_upvoted %}active{% endif %}" onclick="handleUpvote(this, '{{ post.id }}')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+<span class="upvote-count">{{ post.upvotes or 0 }}</span>
+<span class="action-label">Upvote</span>
+</button>
+<button class="action-btn bookmark-btn {% if is_bookmarked %}active{% endif %}" onclick="handleBookmark(this, '{{ post.id }}')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+<span class="action-label">Save</span>
+</button>
+<button class="action-btn" onclick="sharePost('{{ post.title }}')">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+<span class="action-label">Share</span>
+</button>
+{% if session.get('user_id') == post.author_id %}
+<form method="POST" action="{{ url_for('post.delete', post_id=post.id) }}" style="display:inline;" onsubmit="return confirm('Delete this post?')">
+<button type="submit" class="action-btn action-btn--danger">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+<span class="action-label">Delete</span>
+</button>
+</form>
+{% endif %}
+</div>
+<section class="comments-section" id="comments">
+<h2 class="comments-title">Comments <span class="comments-count">({{ comments|length }})</span></h2>
+{% if session.get('user_id') %}
+<div class="comment-form">
+{% if session.get('user_avatar_url') %}
+<img src="{{ session.get('user_avatar_url') }}" class="comment-avatar-img" alt="">
+{% else %}
+<div class="comment-form-avatar">{{ session.get('user_avatar', '?') }}</div>
+{% endif %}
+<div class="comment-form-body">
+<textarea id="commentInput" placeholder="Write a thoughtful comment" maxlength="2000"></textarea>
+<button class="btn-comment" onclick="submitComment('{{ post.id }}')">Comment</button>
+</div>
+</div>
+{% endif %}
+<div class="comments-list" id="commentsList">
+{% for comment in comments %}{% include 'components/comment.html' %}{% endfor %}
+{% if not comments %}<p class="no-comments">No comments yet. Start the conversation.</p>{% endif %}
+</div>
+</section>
+{% if more_posts %}
+<section class="more-from-author">
+<h2 class="section-title">More from {{ post.author_name }}</h2>
+<div class="more-posts-list">
+{% for mp in more_posts %}
+<a href="{{ url_for('post.view', post_id=mp.id) }}" class="more-post-item">
+{% if mp.cover_url %}<img src="{{ mp.cover_url }}" alt="" class="more-post-image">{% endif %}
+<div class="more-post-info">
+<h3>{{ mp.title }}</h3>
+<span class="more-post-meta">{{ mp.created_at|timeago }} &middot; {{ mp.content|readtime }}</span>
+</div>
+</a>
+{% endfor %}
+</div>
+</section>
+{% endif %}
+</div>
+</article>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
+{% endblock %}

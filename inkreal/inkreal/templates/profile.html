@@ -1,0 +1,58 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ user.name }} (@{{ user.handle }}){% endblock %}
+{% block content %}
+<div class="profile-page">
+<div class="profile-cover"><img src="{{ user.cover_url or 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=80' }}" alt=""></div>
+<div class="profile-header">
+<div class="profile-header-inner">
+{% if user.avatar_url %}
+<img src="{{ user.avatar_url }}" alt="{{ user.name }}" class="profile-avatar-img">
+{% else %}
+<div class="profile-avatar-large">{{ user.avatar_letter or '?' }}</div>
+{% endif %}
+<div class="profile-info">
+<h1 class="profile-name">{{ user.name }}</h1>
+<p class="profile-handle">@{{ user.handle }}</p>
+{% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% endif %}
+<div class="profile-meta">
+{% if user.location %}<span class="profile-meta-item">{{ user.location }}</span>{% endif %}
+{% if user.website %}<a href="{{ user.website }}" class="profile-meta-item" target="_blank">{{ user.website|replace('https://','')|replace('http://','') }}</a>{% endif %}
+<span class="profile-meta-item">Joined {{ user.created_at|timeago }}</span>
+</div>
+<div class="profile-stats">
+<span><strong>{{ user.post_count or 0 }}</strong> posts</span>
+<span><strong>{{ user.followers_count or 0 }}</strong> followers</span>
+<span><strong>{{ user.following_count or 0 }}</strong> following</span>
+</div>
+</div>
+<div class="profile-actions">
+{% if is_own_profile %}
+<a href="{{ url_for('profile.settings') }}" class="btn-edit-profile">Edit Profile</a>
+{% else %}
+<button class="btn-follow {% if is_following %}following{% endif %}" onclick="handleFollow(this, '{{ user.id }}')" id="followBtn">{{ 'Following' if is_following else 'Follow' }}</button>
+{% endif %}
+</div>
+</div>
+</div>
+<div class="profile-streak-section">{% include 'components/streak_widget.html' %}</div>
+<div class="profile-content">
+<h2 class="section-title">Posts <span class="count-badge">{{ posts|length }}</span></h2>
+<div class="posts-list">
+{% for post in posts %}{% include 'components/post_card.html' %}{% endfor %}
+{% if not posts %}
+<div class="empty-state">
+{% if is_own_profile %}
+<p>You haven't written anything yet.</p>
+<a href="{{ url_for('post.write') }}" class="btn-primary">Write Your First Post</a>
+{% else %}
+<p>{{ user.name }} hasn't written anything yet.</p>
+{% endif %}
+</div>
+{% endif %}
+</div>
+</div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
+{% endblock %}

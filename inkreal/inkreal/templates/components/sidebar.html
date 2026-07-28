@@ -1,0 +1,28 @@
+﻿<aside class="sidebar">
+{% if current_user %}
+<div class="sidebar-card streak-card">
+<h3 class="sidebar-title">Your Streak</h3>
+<div class="streak-display">
+<div class="streak-number">{{ current_user.streak_current or 0 }}</div>
+<div class="streak-label">day{{ 's' if (current_user.streak_current or 0) != 1 else '' }}</div>
+</div>
+<div class="streak-bar"><div class="streak-bar-fill" style="width:{{ [((current_user.streak_current or 0) / 30) * 100, 100]|min }}%"></div></div>
+<p class="streak-hint">{% if current_user.streak_current and current_user.streak_current > 0 %}Keep going. Write today to maintain your streak.{% else %}Start writing to begin your streak.{% endif %}</p>
+<a href="{{ url_for('post.write') }}" class="sidebar-write-btn">Write Now</a>
+</div>
+{% endif %}
+<div class="sidebar-card">
+<h3 class="sidebar-title">Featured Topics</h3>
+<div class="topic-list">
+<a href="{{ url_for('main.explore') }}" class="topic-item"><span>Technology</span></a>
+<a href="{{ url_for('main.explore') }}" class="topic-item"><span>Writing</span></a>
+<a href="{{ url_for('main.explore') }}" class="topic-item"><span>Life</span></a>
+<a href="{{ url_for('main.explore') }}" class="topic-item"><span>Career</span></a>
+<a href="{{ url_for('main.explore') }}" class="topic-item"><span>Creativity</span></a>
+</div>
+</div>
+<div class="sidebar-footer">
+<p>Copyright 2024 InkReal</p>
+<div class="sidebar-footer-links"><a href="#">About</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+</div>
+</aside>

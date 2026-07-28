@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InkReal — Where Words Are Human</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--ink-primary:#4111CC;--ink-primary-light:#5a3dd6;--ink-brown:#3D2B1F;--ink-beige:#FAF8F5;--ink-beige-dark:#F0EDE8;--ink-cream:#FFFDF9;--ink-text:#1a1a1a;--ink-text-secondary:#555;--ink-text-muted:#888;--ink-border:#E8E4DF}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--ink-cream);color:var(--ink-text);-webkit-font-smoothing:antialiased}
+        .landing-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,253,249,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--ink-border)}
+        .landing-logo{font-family:'Source Serif 4',Georgia,serif;font-size:22px;font-weight:700;color:var(--ink-brown);text-decoration:none;letter-spacing:-0.5px}
+        .landing-logo span{color:var(--ink-primary)}
+        .landing-nav-links{display:flex;align-items:center;gap:32px}
+        .landing-nav-links a{font-size:14px;font-weight:500;color:var(--ink-text-secondary);text-decoration:none;transition:color 0.2s}
+        .landing-nav-links a:hover{color:var(--ink-text)}
+        .btn-nav-start{padding:8px 20px;background:var(--ink-primary);color:#fff!important;border-radius:6px}
+        .btn-nav-start:hover{background:var(--ink-primary-light)}
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 80px;text-align:center}
+        .hero-inner{max-width:720px}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:var(--ink-beige-dark);border:1px solid var(--ink-border);border-radius:100px;font-size:13px;color:var(--ink-text-secondary);margin-bottom:32px}
+        .hero-badge-dot{width:6px;height:6px;background:#28A745;border-radius:50%}
+        .hero h1{font-family:'Source Serif 4',Georgia,serif;font-size:64px;font-weight:700;line-height:1.1;color:var(--ink-brown);letter-spacing:-2px;margin-bottom:24px}
+        .hero h1 em{font-style:italic;color:var(--ink-primary)}
+        .hero-subtitle{font-size:19px;line-height:1.7;color:var(--ink-text-secondary);max-width:540px;margin:0 auto 40px;font-weight:400}
+        .hero-actions{display:flex;align-items:center;justify-content:center;gap:16px}
+        .btn-hero-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;background:var(--ink-primary);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif}
+        .btn-hero-primary:hover{background:var(--ink-primary-light);transform:translateY(-1px)}
+        .btn-hero-secondary{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;background:transparent;color:var(--ink-text);border:1px solid var(--ink-border);border-radius:8px;font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif}
+        .btn-hero-secondary:hover{border-color:var(--ink-text-muted);background:var(--ink-beige)}
+        .features-section{padding:100px 24px;background:var(--ink-beige);border-top:1px solid var(--ink-border)}
+        .features-header{text-align:center;max-width:540px;margin:0 auto 64px}
+        .features-header h2{font-family:'Source Serif 4',Georgia,serif;font-size:36px;font-weight:600;color:var(--ink-brown);margin-bottom:16px;letter-spacing:-1px}
+        .features-header p{font-size:16px;color:var(--ink-text-secondary);line-height:1.6}
+        .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1080px;margin:0 auto}
+        .feature-card{padding:36px 32px;background:var(--ink-cream);border:1px solid var(--ink-border);border-radius:12px}
+        .feature-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--ink-beige-dark);border-radius:10px;font-size:22px;margin-bottom:20px}
+        .feature-card h3{font-family:'Inter',sans-serif;font-size:17px;font-weight:600;color:var(--ink-text);margin-bottom:10px}
+        .feature-card p{font-size:14px;line-height:1.65;color:var(--ink-text-secondary)}
+        .manifesto-section{padding:100px 24px;background:var(--ink-brown);color:#fff}
+        .manifesto-inner{max-width:640px;margin:0 auto;text-align:center}
+        .manifesto-inner h2{font-family:'Source Serif 4',Georgia,serif;font-size:40px;font-weight:600;margin-bottom:32px;letter-spacing:-1px;line-height:1.2}
+        .manifesto-inner blockquote{font-family:'Source Serif 4',Georgia,serif;font-size:20px;font-style:italic;line-height:1.7;color:rgba(255,255,255,0.8);border-left:3px solid var(--ink-primary);padding-left:24px;text-align:left;margin:0 auto}
+        .cta-section{padding:100px 24px;text-align:center;background:var(--ink-cream)}
+        .cta-section h2{font-family:'Source Serif 4',Georgia,serif;font-size:40px;font-weight:600;color:var(--ink-brown);margin-bottom:16px;letter-spacing:-1px}
+        .cta-section p{font-size:17px;color:var(--ink-text-secondary);margin-bottom:32px}
+        .landing-footer{padding:48px 24px;text-align:center;border-top:1px solid var(--ink-border);background:var(--ink-beige)}
+        .landing-footer p{font-size:13px;color:var(--ink-text-muted)}
+        .landing-footer a{color:var(--ink-primary);text-decoration:none}
+        @media(max-width:768px){.landing-nav{padding:0 20px}.landing-nav-links a:not(.btn-nav-start){display:none}.hero h1{font-size:38px;letter-spacing:-1px}.hero-subtitle{font-size:16px}.hero-actions{flex-direction:column}.features-grid{grid-template-columns:1fr}.manifesto-inner h2{font-size:28px}.cta-section h2{font-size:28px}}
+    </style>
+</head>
+<body>
+    <nav class="landing-nav">
+        <a href="/" class="landing-logo">Ink<span>Real</span></a>
+        <div class="landing-nav-links">
+            <a href="#features">Features</a>
+            <a href="#manifesto">Manifesto</a>
+            <a href="{{ url_for('auth.login') }}">Sign in</a>
+            <a href="{{ url_for('auth.register') }}" class="btn-nav-start">Start Writing</a>
+        </div>
+    </nav>
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-badge"><span class="hero-badge-dot"></span>Built for human writers</div>
+            <h1>Write like a <em>human</em>, not a machine.</h1>
+            <p class="hero-subtitle">InkReal is a writing platform that celebrates authentic human expression. Share your raw thoughts, build a writing streak, and connect with people who believe words should come from the heart — not an algorithm.</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('auth.register') }}" class="btn-hero-primary">Start Writing — it's free</a>
+                <a href="#features" class="btn-hero-secondary">Learn more</a>
+            </div>
+        </div>
+    </section>
+    <section class="features-section" id="features">
+        <div class="features-header">
+            <h2>Built for real writers</h2>
+            <p>No engagement bait. No algorithm games. Just a clean space to write, share, and grow as a human writer.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon">✍️</div><h3>Distraction-Free Editor</h3><p>A clean, beautiful writing experience. Markdown support, no clutter. Just you and your words.</p></div>
+            <div class="feature-card"><div class="feature-icon">🔥</div><h3>Writing Streaks</h3><p>Build consistency with daily writing streaks. Track your progress and level up as a writer.</p></div>
+            <div class="feature-card"><div class="feature-icon">🧬</div><h3>Human Score</h3><p>Every post gets a human authenticity indicator. We celebrate real writing, not AI-generated content.</p></div>
+            <div class="feature-card"><div class="feature-icon">💬</div><h3>Meaningful Discussions</h3><p>Engage in real conversations. Upvote thoughtful posts. Build genuine connections.</p></div>
+            <div class="feature-card"><div class="feature-icon">👤</div><h3>Writer Profiles</h3><p>Showcase your writing journey. Your streak, your best posts, your authentic voice — all in one place.</p></div>
+            <div class="feature-card"><div class="feature-icon">🌍</div><h3>Open Community</h3><p>Explore topics, discover writers, and find your tribe. A community that values substance over virality.</p></div>
+        </div>
+    </section>
+    <section class="manifesto-section" id="manifesto">
+        <div class="manifesto-inner">
+            <h2>Our belief is simple.</h2>
+            <blockquote>"In an age where AI can write anything, the most radical act is to write something yourself. Imperfect, raw, real — that's what makes it worth reading. InkReal exists for the humans who still believe their own words matter."</blockquote>
+        </div>
+    </section>
+    <section class="cta-section">
+        <h2>Ready to write something real?</h2>
+        <p>Join thousands of writers who choose authenticity over automation.</p>
+        <a href="{{ url_for('auth.register') }}" class="btn-hero-primary">Create your account</a>
+    </section>
+    <footer class="landing-footer">
+        <p>© 2024 <a href="/">InkReal</a>. Built for humans, by humans.</p>
+    </footer>
+</body>
+</html>
